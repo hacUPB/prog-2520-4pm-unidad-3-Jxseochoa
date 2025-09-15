@@ -1,57 +1,91 @@
-# Ejercicio 1 
+# Ejercicio 1: Estabilidad del avión en turbulencia
 
-Un avión en vuelo se enfrenta a una turbulencia que modifica su ángulo de ataque durante 8 segundos.
-El programa simula cómo cambia la sustentación y determina si el vuelo se mantiene estable, crítico o si entra en pérdida.
+## Enunciado
+Un avión en vuelo se enfrenta a una turbulencia que dura 8 segundos.  
+Durante este tiempo, el **piloto debe decidir en cada segundo** si aumentar, disminuir o mantener:  
 
-El usuario no ingresa datos manualmente, sino que selecciona uno de tres aviones predefinidos **(Cessna 172, Airbus A320 o Boeing 747-8)**, cada uno con su peso, área alar, velocidad inicial y coeficiente de sustentación base. El usuario solamente cambia el ángulo de ataque, el cual, altera el Cl.
+- El **ángulo de ataque (AoA)**, que afecta el **coeficiente de sustentación (Cl)**.  
+- La **velocidad del avión (V)**.  
 
-| Tipo    | Variable       | Descripción                                      |Tipo de dato|
-| ------- | -------------- | -------------------------------------------------| -----------|
-| Entrada | avion        | Selección del avión (1, 2 o 3)                     | int        |
-| Entrada | peso         | Peso del avión (N)                                 | float      |
-| Entrada | area         | Área alar (m²)                                     | float      |
-| Entrada | v            | Velocidad inicial (m/s)                            | float      |
-| Entrada | cl_base      | Coeficiente de sustentación base                   | float      |
-| Salida  | sustentacion | Valor de sustentación en cada segundo (N)          | float      |
-| Salida  | estado       | Mensaje del estado (Estable, Crítico o Pérdida)    | str        |
-| Control | segundo      | Contador de tiempo (1 a 8)                         | int        |
-| Control | AoA          | Ángulo de ataque simulado mediante cambio en Cl    | float      |
-| Control | decision     | Opción del usuario (aumentar o mantener velocidad) | str        |
-|Constante|p             | Densidad del aire (kg/m³)   
-# Análisis del ejercicio
+El programa simula los efectos de estas decisiones sobre la sustentación y evalúa si el avión logra mantenerse en vuelo o entra en pérdida.  
 
-## Contexto del ejercicio
-Se quiere analizar la sustentación de un avión durante turbulencia, considerando cómo cambios en el ángulo de ataque alteran el coeficiente de sustentación (Cl).
+El usuario no ingresa datos numéricos, sino que selecciona uno de tres aviones predefinidos **(Cessna 172, Airbus A320 o Boeing 747-8)**, cada uno con su peso, área alar, velocidad inicial, coeficiente de sustentación base y un ángulo de ataque inicial.
 
-## Constantes utilizadas:
-### Densidad del aire a nivel del mar: 
-- p = 1.225 kg/m³.
-### Ecuación principal:
-- L=0.5⋅p⋅V²⋅Cl⋅A
+---
 
-Donde:
-- L = Sustentación (N)
-- p = Densidad del aire (kg/m³)
-- V = Velocidad (m/s)
-- Cl = Coeficiente de sustentación
-- A = Área alar (m²)
+## Aviones predefinidos
 
-## Estados definidos:
-- Estable: Sustentación ≥ Peso.
-- Crítico: Sustentación < 80% del Peso.
-- Pérdida: Sustentación < 50% del Peso (fin de simulación).
+| Avión               | Peso (N) | Área alar (m²) | Velocidad inicial (m/s) | Cl base | AoA inicial (°) |
+|----------------------|----------|----------------|--------------------------|---------|-----------------|
+| Cessna 172 Skyhawk  | 10,000   | 16.2           | 65                       | 0.4     | 5               |
+| Airbus A320         | 600,000  | 122.6          | 130                      | 0.5     | 5               |
+| Boeing 747-8        | 3,500,000| 554            | 250                      | 0.6     | 5               |
 
-## Bucle:
-- Se ejecuta un bucle de 8 segundos.
-- En cada segundo se altera el coeficiente de sustentación (Cl ± 0.05) para simular turbulencia.
-- Se recalcula la sustentación y se determina el estado del vuelo.
+---
 
-## Decisiones del usuario (condicionales):
+## Tabla de variables
 
-### En cada segundo el usuario puede:
-- Aumentar velocidad: se incrementa +10 m/s.
-- Mantener velocidad: se conserva igual.
+| Tipo       | Variable      | Descripción                                      | Tipo de dato |
+|------------|---------------|--------------------------------------------------|--------------|
+| Entrada    | avion         | Selección del avión (1, 2 o 3)                   | int          |
+| Entrada    | aoa           | Ángulo de ataque actual (°)                      | int          |
+| Entrada    | decision_aoa  | Decisión sobre el ángulo: aumentar, disminuir o mantener | str  |
+| Entrada    | v             | Velocidad (m/s)                                  | float        |
+| Entrada    | decision_v    | Decisión sobre la velocidad: aumentar, disminuir o mantener | str |
+| Constante  | rho           | Densidad del aire (1.225 kg/m³)                  | float        |
+| Constante  | cl_base       | Cl inicial del avión en el AoA base              | float        |
+| Constante  | aoa_inicial   | Ángulo de ataque de referencia para Cl base      | int          |
+| Salida     | cl_actual     | Coeficiente de sustentación ajustado por AoA     | float        |
+| Salida     | sustentacion  | Sustentación (N) en cada segundo                 | float        |
+| Salida     | estado        | Estado de vuelo (Estable, Crítico o Pérdida)     | str          |
+| Control    | segundo       | Contador de tiempo (1 a 8)                       | int          |
+| Control    | estado_final  | Resultado final de la simulación (Exitoso o Pérdida) | str      |
 
-## Finalización del programa:
-- Si ocurre pérdida antes de los 8 segundos → la simulación termina.
-- Si completa los 8 segundos sin pérdida → éxito del vuelo.
+---
+
+## Constantes utilizadas
+
+- **Densidad del aire a nivel del mar:**  
+  ρ = 1.225 kg/m³  
+
+- **Relación simplificada entre Cl y AoA:**  
+ Cl_actual = Cl_base + 0.1 x (AoA - AoA_inicial)
+
+## Ecuación principal
+L = 0.5 x \rho x V^2 x Cl x A
+
+Donde:  
+- **L** = Sustentación (N)  
+- **ρ** = Densidad del aire (kg/m³)  
+- **V** = Velocidad (m/s)  
+- **Cl** = Coeficiente de sustentación  
+- **A** = Área alar (m²)  
+
+
+## Estados definidos
+
+- **Estable:** Sustentación ≥ Peso.  
+- **Crítico:** 0.5 × Peso ≤ Sustentación < 0.8 × Peso.  
+- **Pérdida:** Sustentación < 0.5 × Peso → fin de simulación.  
+
+## Bucle de simulación
+
+- El ciclo se ejecuta por **8 segundos**.  
+- En cada segundo:  
+  1. Se muestra el **AoA actual** y el usuario decide aumentarlo, disminuirlo o mantenerlo.  
+  2. Se recalcula el **Cl** y la **sustentación**.  
+  3. Se muestra el **estado del vuelo** (Estable, Crítico o Pérdida).  
+  4. Se muestra la **velocidad actual** y el usuario decide aumentarla, disminuirla o mantenerla.  
+
+## Finalización del programa
+
+- **Fracaso:** si ocurre pérdida antes de los 8 segundos.  
+- **Éxito:** si se completan los 8 segundos sin pérdida.  
+
+## Resultados posibles
+
+- **Éxito:**  
+  El avión logró atravesar la turbulencia con éxito.
+
+- **Fracaso:**  
+  El avión no logró superar la turbulencia.
