@@ -94,3 +94,88 @@ Durante la simulación, el sistema calcula cada **5 minutos**:
 - **Vuelo exitoso:** el avión completa todas las fases con al menos 1500 L de combustible, cumpliendo la reserva mínima.  
 - **Vuelo en emergencia:** el avión completa el plan, pero aterriza con menos de 1500 L.  
 - **Vuelo fallido:** el avión se queda sin combustible antes de terminar alguna fase.  
+
+
+# Pseudocódigo
+```  
+Inicio
+
+consumo_ascenso = 75
+consumo_crucero = 50
+consumo_descenso = 37.5
+intervalo = 5
+min_seguridad = 1500
+
+Mostrar "=== EJERCICIO 3: CONSUMO DE COMBUSTIBLE ==="
+Leer combustible_ini
+Leer t_ascenso
+Leer t_crucero
+Leer t_descenso
+
+combustible_act = combustible_ini
+tiempo_total = 0
+estado_final = "Exitoso"
+
+Definir procedimiento simular_fase(nombre_fase, tiempo_fase, consumo_fase)
+    Para minuto desde 0 hasta tiempo_fase con paso intervalo Hacer
+        delta_combustible = consumo_fase * intervalo
+        combustible_act = combustible_act - delta_combustible
+        tiempo_total = tiempo_total + intervalo
+
+        Si combustible_act <= 0 Entonces
+            Mostrar "Minuto", tiempo_total, ": Sin combustible durante", nombre_fase, ". Vuelo fallido."
+            estado_final = "Vuelo fallido"
+            salida_combustible = combustible_act
+            salida_tiempo = tiempo_total
+            salida_estado = estado_final
+            Salir del procedimiento
+        Sino Si combustible_act <= min_seguridad Entonces
+            Mostrar "Minuto", tiempo_total, ": Combustible", combustible_act, "litros → Emergencia en", nombre_fase
+        Sino
+            Mostrar "Minuto", tiempo_total, ": Combustible", combustible_act, "litros → Normal en", nombre_fase
+        Fin Si
+    Fin Para
+
+    salida_combustible = combustible_act
+    salida_tiempo = tiempo_total
+    salida_estado = "Continuar"
+Fin Procedimiento
+
+simular_fase("ascenso", t_ascenso, consumo_ascenso)
+combustible_act = salida_combustible
+tiempo_total = salida_tiempo
+estado = salida_estado
+Si estado = "Vuelo fallido" Entonces
+    Fin
+Fin Si
+
+simular_fase("crucero", t_crucero, consumo_crucero)
+combustible_act = salida_combustible
+tiempo_total = salida_tiempo
+estado = salida_estado
+Si estado = "Vuelo fallido" Entonces
+    Fin
+Fin Si
+
+simular_fase("descenso", t_descenso, consumo_descenso)
+combustible_act = salida_combustible
+tiempo_total = salida_tiempo
+estado = salida_estado
+Si estado = "Vuelo fallido" Entonces
+    Fin
+Fin Si
+
+Mostrar "---- FIN DEL VUELO ----"
+Mostrar "Tiempo total:", tiempo_total, "minutos"
+Mostrar "Combustible final:", combustible_act, "litros"
+
+Si combustible_act >= min_seguridad Entonces
+    Mostrar "Resultado: Vuelo exitoso. Aterrizaje con reserva suficiente."
+Sino Si combustible_act > 0 Entonces
+    Mostrar "Resultado: Vuelo completado en emergencia. Aterrizaje con menos de la reserva mínima."
+Sino
+    Mostrar "Resultado: Vuelo fallido. Sin combustible antes de aterrizar."
+Fin Si
+
+Fin
+```
