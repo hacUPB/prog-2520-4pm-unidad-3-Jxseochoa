@@ -89,3 +89,92 @@ Donde:
 
 - **Fracaso:**  
   El avión no logró superar la turbulencia.
+
+
+# Pseudocódigo
+```
+Inicio
+
+ρ = 1.225    // densidad del aire (kg/m³)
+
+Definir aviones:
+    1 → Cessna 172 Skyhawk: peso=10000, área=16.2, v=65, Cl_base=0.4, AoA_inicial=5
+    2 → Airbus A320: peso=600000, área=122.6, v=130, Cl_base=0.5, AoA_inicial=5
+    3 → Boeing 747-8: peso=3500000, área=554, v=250, Cl_base=0.6, AoA_inicial=5
+
+Mostrar "Seleccione un avión:"
+Leer opcion
+
+Si opcion no está en {1,2,3} Entonces
+    Mostrar "Opción inválida. Debe seleccionar 1, 2 o 3."
+    Fin
+Fin Si
+
+peso = valor_peso_del_avion
+área = valor_area_del_avion
+v = valor_velocidad_inicial
+Cl_base = valor_Cl_base
+AoA_inicial = valor_AoA_inicial
+
+AoA = AoA_inicial
+estado_final = "Exitoso"
+
+Para segundo desde 1 hasta 8 Hacer
+    Mostrar "Segundo", segundo
+    Mostrar "Ángulo de ataque actual =", AoA
+
+    Mostrar "¿Ángulo de ataque: (a)umentar, (d)isminuir o (m)antener?"
+    Leer decision_AoA
+
+    Si decision_AoA = "a" Entonces
+        AoA = AoA + 1
+        Mostrar "Ángulo de ataque aumentó a", AoA
+    Sino Si decision_AoA = "d" Entonces
+        AoA = AoA - 1
+        Mostrar "Ángulo de ataque disminuyó a", AoA
+    Sino Si decision_AoA = "m" Entonces
+        Mostrar "Ángulo de ataque se mantiene en", AoA
+    Sino
+        Mostrar "Opción inválida → se mantiene ángulo"
+    Fin Si
+
+    Cl_actual = Cl_base + 0.1 × (AoA - AoA_inicial)
+    sustentación = 0.5 × ρ × v² × Cl_actual × área
+    Mostrar "Velocidad =", v, "| Cl =", Cl_actual, "| Sustentación =", sustentación
+
+    Si sustentación ≥ peso Entonces
+        Mostrar "Estado: Estable"
+    Sino Si sustentación < 0.5 × peso Entonces
+        Mostrar "Estado: Pérdida - Fin de simulación"
+        estado_final = "Pérdida"
+        Salir del bucle
+    Sino Si sustentación < 0.8 × peso Entonces
+        Mostrar "Estado: Crítico"
+    Fin Si
+
+    Mostrar "Velocidad actual =", v
+    Mostrar "¿Velocidad: (a)umentar, (d)isminuir, (m)antener?"
+    Leer decision_v
+
+    Si decision_v = "a" Entonces
+        v = v + 10
+        Mostrar "Velocidad aumentó a", v
+    Sino Si decision_v = "d" Entonces
+        v = v - 10
+        Mostrar "Velocidad disminuyó a", v
+    Sino Si decision_v = "m" Entonces
+        Mostrar "Velocidad se mantiene en", v
+    Sino
+        Mostrar "Opción inválida → velocidad se mantiene"
+    Fin Si
+
+Fin Para
+
+Si estado_final = "Exitoso" Entonces
+    Mostrar "El avión logró atravesar la turbulencia con éxito."
+Sino
+    Mostrar "El avión no logró superar la turbulencia."
+Fin Si
+
+Fin
+```
