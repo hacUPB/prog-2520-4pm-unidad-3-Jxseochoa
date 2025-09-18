@@ -84,3 +84,82 @@ El objetivo es recorrer la mayor distancia horizontal posible antes de llegar al
 - **Éxito parcial:** el avión recorre una distancia considerable, aunque con decisiones subóptimas.  
 - **Fracaso:** el avión baja demasiado el L/D (<5) y pierde eficiencia, aterrizando de forma crítica.
 
+# Pseudocódigo
+```
+Inicio
+
+Definir aviones:
+    1 → Piper PA-28 Cherokee: h_inicial=600, L_D=10, delta_h=100
+    2 → Embraer E190: h_inicial=1200, L_D=14, delta_h=150
+    3 → Concorde: h_inicial=2000, L_D=7, delta_h=250
+
+Mostrar "Seleccione un avión:"
+Mostrar "1. Piper PA-28 Cherokee"
+Mostrar "2. Embraer E190"
+Mostrar "3. Concorde"
+Leer opcion
+
+Si opcion no está en {1,2,3} Entonces
+    Mostrar "Opción inválida."
+    Fin
+Fin Si
+
+h_actual = h_inicial del avión seleccionado
+L_D = L_D del avión seleccionado
+delta_h = delta_h del avión seleccionado
+distancia = 0
+segundo = 0
+estado_final = "Exitoso"
+
+Mostrar "Has seleccionado:", nombre del avión
+Mostrar "Altura inicial =", h_actual, "Relación L/D base =", L_D, "Pérdida por segundo =", delta_h
+
+Mientras h_actual > 0 Hacer
+    segundo = segundo + 1
+    Mostrar "Segundo", segundo
+    Mostrar "Altura actual =", h_actual, "Distancia recorrida =", distancia
+    Mostrar "Relación L/D actual =", L_D
+
+    Mostrar "¿Ángulo de picado: (a)umentar, (d)isminuir o (m)antener?"
+    Leer decision
+
+    Si decision = "a" Entonces
+        L_D = L_D - 2
+        Mostrar "El ángulo aumentó → L/D disminuye a", L_D
+    Sino Si decision = "d" Entonces
+        L_D = L_D + 2
+        Mostrar "El ángulo disminuyó → L/D aumenta a", L_D
+    Sino Si decision = "m" Entonces
+        Mostrar "El ángulo se mantiene → L/D =", L_D
+    Sino
+        Mostrar "Opción inválida → se mantiene el valor."
+    Fin Si
+
+    Si L_D < 5 Entonces
+        Mostrar "Estado: Crítico, el avión perdió eficiencia de planeo."
+        estado_final = "Fracaso"
+        Salir del bucle
+    Fin Si
+
+    delta_x = L_D × delta_h
+    h_actual = h_actual - delta_h
+    Si h_actual < 0 Entonces
+        h_actual = 0
+    Fin Si
+    distancia = distancia + delta_x
+
+Fin Mientras
+
+Mostrar "---- FIN DE SIMULACIÓN ----"
+Mostrar "Tiempo total =", segundo
+Mostrar "Distancia total recorrida =", distancia
+
+Si estado_final = "Exitoso" Entonces
+    Mostrar "El avión logró planear hasta el suelo con éxito."
+Sino
+    Mostrar "El avión no logró mantener un planeo eficiente y aterrizó de forma crítica."
+Fin Si
+
+Fin
+```
+
