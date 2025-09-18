@@ -32,7 +32,9 @@ def ejercicio1():
     def calcular_sustentacion(cl, rho, v, area):
         return 0.5 * rho * v**2 * cl * area
 
-    print("EJERCICIO 1: ESTABILIDAD EN TURBULENCIA")
+    RHO = 1.225
+
+    print("=== EJERCICIO 1: ESTABILIDAD EN TURBULENCIA ===")
     print("Seleccione un avión:")
     print("1. Cessna 172 Skyhawk")
     print("2. Airbus A320")
@@ -49,6 +51,7 @@ def ejercicio1():
         for segundo in range(1, 9):
             print("Segundo", segundo)
             print("Ángulo de ataque actual:", aoa, "°")
+
             eleccion_aoa = input("¿Ángulo de ataque: (a)umentar, (d)isminuir o (m)antener? ")
             if eleccion_aoa == "a":
                 aoa += 1
@@ -63,7 +66,7 @@ def ejercicio1():
 
             cl_actual = cl_base + 0.1 * (aoa - avion["aoa_inicial"])
             sustentacion = calcular_sustentacion(cl_actual, RHO, v, area)
-            print("Velocidad =", round(v, 1), "m/s | Cl =", round(cl_actual, 3), "| Sustentación =", round(sustentacion, 2), "N")
+            print("Velocidad =", v, "m/s | Cl =", cl_actual, "| Sustentación =", sustentacion, "N")
 
             if sustentacion >= peso:
                 print("Estado: Estable")
@@ -94,6 +97,7 @@ def ejercicio1():
     else:
         print("Opción inválida. Debe seleccionar 1, 2 o 3.")
 
+
 def ejercicio2():
     aviones = {
         1: {"nombre": "Piper PA-28 Cherokee", "h_inicial": 600, "L_D": 10, "delta_h": 100},
@@ -101,7 +105,7 @@ def ejercicio2():
         3: {"nombre": "Concorde", "h_inicial": 2000, "L_D": 7, "delta_h": 250}
     }
 
-    print("EJERCICIO 2: PLANEO DE EMERGENCIA SIN MOTORES")
+    print("=== EJERCICIO 2: PLANEO DE EMERGENCIA SIN MOTORES ===")
     print("Seleccione un avión:")
     print("1. Piper PA-28 Cherokee")
     print("2. Embraer E190")
@@ -127,9 +131,11 @@ def ejercicio2():
     while h_actual > 0:
         segundo += 1
         print("Segundo", segundo)
-        print("Altura actual:", h_actual, "m | Distancia recorrida:", round(distancia, 2), "m")
+        print("Altura actual:", h_actual, "m | Distancia recorrida:", distancia, "m")
         print("Relación L/D actual:", L_D, ":1")
+
         decision = input("¿Ángulo de picado: (a)umentar, (d)isminuir o (m)antener? ")
+
         if decision == "a":
             L_D -= 2
             print("El ángulo aumentó → L/D disminuye a", L_D, ":1")
@@ -140,23 +146,27 @@ def ejercicio2():
             print("El ángulo se mantiene → L/D =", L_D, ":1")
         else:
             print("Opción inválida → se mantiene el valor.")
+
         if L_D < 5:
             print("Estado: Crítico, el avión perdió eficiencia de planeo.")
             estado_final = "Fracaso"
             break
+
         delta_x = L_D * delta_h
         h_actual -= delta_h
         if h_actual < 0:
             h_actual = 0
         distancia += delta_x
 
-    print("FIN DE SIMULACIÓN")
+    print("---- FIN DE SIMULACIÓN ----")
     print("Tiempo total:", segundo, "segundos")
-    print("Distancia total recorrida:", round(distancia, 2), "m")
+    print("Distancia total recorrida:", distancia, "m")
+
     if estado_final == "Exitoso":
         print("El avión logró planear hasta el suelo con éxito.")
     else:
         print("El avión no logró mantener un planeo eficiente y aterrizó de forma crítica.")
+
 
 def ejercicio3():
     consumo_ascenso = 75
